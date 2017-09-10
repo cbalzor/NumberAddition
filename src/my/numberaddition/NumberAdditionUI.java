@@ -4,20 +4,107 @@
  * and open the template in the editor.
  */
 package my.numberaddition;
-
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Dr. Baladron
  */
 public class NumberAdditionUI extends javax.swing.JFrame {
-
+    
+    private Connection conn;
+    private ResultSet rs;
     /**
      * Creates new form NumberAdditionUI
      */
     public NumberAdditionUI() {
+        conn = null;
+        rs = null;
         initComponents();
+        testConnection();
+        
+        
     }
 
+    private void insertReg(){
+        try {
+            float num1 = Float.parseFloat(jTextField1.getText());
+            float num2 = Float.parseFloat(jTextField2.getText());
+            float num3 = Float.parseFloat(jTextField3.getText());
+            
+            // the mysql insert statement
+            String query = " insert into valores "
+                    + " values (?, ?, ?)";
+            
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setInt(1, Math.round(num1));
+            preparedStmt.setInt(2, Math.round(num2));
+            preparedStmt.setInt(3, Math.round(num3));
+            // execute the preparedstatement
+            preparedStmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(NumberAdditionUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void updateNumbers(int num1, int num2, int num3){
+        jTextField1.setText(String.valueOf(num1));
+        jTextField2.setText(String.valueOf(num2));
+        jTextField3.setText(String.valueOf(num3));
+    }
+    
+    private void loadReg(){
+        if (rs==null){
+            try {
+                // Preparamos la consulta
+                Statement s = conn.createStatement(); 
+                rs = s.executeQuery("select * from valores");
+                if (rs.next()){
+                    updateNumbers(rs.getInt(1),rs.getInt(2),rs.getInt(3));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(NumberAdditionUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }else{
+            try {
+                if (rs.next()){
+                    updateNumbers(rs.getInt(1),rs.getInt(2),rs.getInt(3));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(NumberAdditionUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }
+    
+    private void testConnection() {
+        try {
+            // The newInstance() call is a work around for some
+            // broken Java implementations
+
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            System.out.println("DRIVER OK");
+        } catch (Exception ex) {
+            System.out.println("DRIVER ERROR");
+        }
+        
+        try {
+            conn
+                    = DriverManager.getConnection("jdbc:mysql://localhost/prueba1?"
+                            + "user=admin&password=admin");
+            System.out.println("Conection OK");
+            // Do something with the Connection
+        } catch (SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,6 +124,8 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel");
@@ -128,6 +217,20 @@ public class NumberAdditionUI extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setText("LoadReg");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("InsertReg");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -135,7 +238,12 @@ public class NumberAdditionUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton3)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -145,7 +253,10 @@ public class NumberAdditionUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4)
+                    .addComponent(jButton5))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -159,6 +270,11 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(NumberAdditionUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.exit(0);
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -166,7 +282,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -175,13 +291,21 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         // We have to parse the text to a type float.
         num1 = Float.parseFloat(jTextField1.getText());
         num2 = Float.parseFloat(jTextField2.getText());
-       // Now we can perform the addition.
+        // Now we can perform the addition.
         result = num1+num2;
         // We will now pass the value of result to jTextField3.
         // At the same time, we are going to
         // change the value of result from a float to a string.
         jTextField3.setText(String.valueOf(result));
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        loadReg();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        insertReg();
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -222,6 +346,8 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
