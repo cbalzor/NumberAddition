@@ -133,6 +133,31 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         }
     }
     
+    private void testRemoteDb(){
+        try {
+            // The newInstance() call is a work around for some
+            // broken Java implementations
+
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            System.out.println("DRIVER OK");
+        } catch (Exception ex) {
+            System.out.println("DRIVER ERROR");
+        }
+        
+        try {
+            conn
+                    = DriverManager.getConnection("jdbc:mysql://db4free.net/basededatoscb?"
+                            + "user=datoscb&password=qwerty");
+            System.out.println("Conection OK");
+            // Do something with the Connection
+        } catch (SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -154,6 +179,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel");
@@ -259,6 +285,13 @@ public class NumberAdditionUI extends javax.swing.JFrame {
             }
         });
 
+        jButton6.setText("testRemoteDb");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -274,6 +307,10 @@ public class NumberAdditionUI extends javax.swing.JFrame {
                         .addComponent(jButton3))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton6)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -285,6 +322,8 @@ public class NumberAdditionUI extends javax.swing.JFrame {
                     .addComponent(jButton3)
                     .addComponent(jButton4)
                     .addComponent(jButton5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton6)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -342,6 +381,10 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         insertReg();
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        testRemoteDb();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -383,6 +426,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
