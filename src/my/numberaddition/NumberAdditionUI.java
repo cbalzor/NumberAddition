@@ -4,9 +4,19 @@
  * and open the template in the editor.
  */
 package my.numberaddition;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.List;
+import org.apache.poi.openxml4j.exceptions.*;
+
+
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 /**
  *
  * @author Dr. Baladron
@@ -78,6 +88,24 @@ public class NumberAdditionUI extends javax.swing.JFrame {
             }
         }
         
+    }
+    
+    private void substituteText() throws IOException, InvalidFormatException{
+        loadReg();
+        XWPFDocument doc = new XWPFDocument(OPCPackage.open("Prueba.docx"));
+        for (XWPFParagraph p : doc.getParagraphs()) {
+            List<XWPFRun> runs = p.getRuns();
+            if (runs != null) {
+                for (XWPFRun r : runs) {
+                    String text = r.getText(0);
+                    if (text != null && text.contains("<CODE1>")) {
+                        text = text.replace("<CODE1>", "--haystack--");
+                        r.setText(text, 0);
+                    }
+                }
+            }
+        }
+        doc.write(new FileOutputStream("output.docx"));
     }
     
     private void testConnection() {
@@ -301,6 +329,13 @@ public class NumberAdditionUI extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         loadReg();
+        try {
+            substituteText();
+        } catch (IOException ex) {
+            Logger.getLogger(NumberAdditionUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidFormatException ex) {
+            Logger.getLogger(NumberAdditionUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
