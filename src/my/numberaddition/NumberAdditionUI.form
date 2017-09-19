@@ -80,10 +80,11 @@
                           <Component id="ButtonUp" max="32767" attributes="0"/>
                           <Component id="ButtonNew" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="8" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="ButtonGuardar" max="32767" attributes="0"/>
                           <Component id="ButtonBorrar" max="32767" attributes="0"/>
+                          <Component id="LoadButton" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -121,6 +122,7 @@
                   <Component id="EpisodioLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="EpisodioField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="ButtonNew" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="LoadButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -460,6 +462,14 @@
         <Property name="text" type="java.lang.String" value="Id"/>
         <Property name="name" type="java.lang.String" value="NumHistLabel" noResource="true"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="LoadButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cargar"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="LoadButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

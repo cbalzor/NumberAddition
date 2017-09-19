@@ -108,6 +108,20 @@ public class DbManager {
         return(d);
     }
     
+    public ResultSet getAllRegTags(){
+        ResultSet rs = null;
+        try {
+            Statement s = conn.createStatement();
+            rs = s.executeQuery("select numhist, paciente, regid from " + TABLE_HEADER);
+            //if (rs.next()){
+            //    updateNumbers(rs.getInt(1),rs.getInt(2),rs.getInt(3));
+            //}
+        } catch (SQLException ex) {
+            Logger.getLogger(DbManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
+    
     public DataPackage retrieveReg(int id){
        DataPackage data = new DataPackage();
        System.out.println("SELECT * FROM " + TABLE_HEADER + 

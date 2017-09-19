@@ -83,7 +83,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         }   
     }
     
-    private void loadReg(int id){
+    public void loadReg(int id){
         DataPackage data = myDbManager.retrieveReg(id);
         updateInfo(data);
     }
@@ -133,7 +133,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
             try {
                 // Preparamos la consulta
                 Statement s = conn.createStatement(); 
-                rs = s.executeQuery("select * from valores");
+                rs = s.executeQuery("select numhist, paciente from valores");
                 if (rs.next()){
                     updateNumbers(rs.getInt(1),rs.getInt(2),rs.getInt(3));
                 }
@@ -265,6 +265,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         ButtonGuardar = new javax.swing.JButton();
         IdField = new javax.swing.JTextField();
         IdLabel = new javax.swing.JLabel();
+        LoadButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel");
@@ -497,6 +498,13 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         IdLabel.setText("Id");
         IdLabel.setName("NumHistLabel"); // NOI18N
 
+        LoadButton.setText("Cargar");
+        LoadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoadButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -547,10 +555,11 @@ public class NumberAdditionUI extends javax.swing.JFrame {
                             .addComponent(ButtonDown, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ButtonUp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ButtonNew, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(ButtonGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ButtonBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(ButtonBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(LoadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -580,7 +589,8 @@ public class NumberAdditionUI extends javax.swing.JFrame {
                     .addComponent(MotivoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(EpisodioLabel)
                     .addComponent(EpisodioField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ButtonNew))
+                    .addComponent(ButtonNew)
+                    .addComponent(LoadButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(IdLabel)
@@ -694,6 +704,15 @@ public class NumberAdditionUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_IdFieldActionPerformed
 
+    private void LoadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadButtonActionPerformed
+        RegSelector rs = new RegSelector(this,false);
+        rs.setVisible(true);
+        ResultSet results = myDbManager.getAllRegTags();
+        rs.setList(results);
+        rs.setUI(this);
+        //System.out.println("JABOR");
+    }//GEN-LAST:event_LoadButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -741,6 +760,7 @@ public class NumberAdditionUI extends javax.swing.JFrame {
     private javax.swing.JLabel FechaLabel;
     private javax.swing.JTextField IdField;
     private javax.swing.JLabel IdLabel;
+    private javax.swing.JButton LoadButton;
     private javax.swing.JTextField MedicoField;
     private javax.swing.JLabel MedicoLabel;
     private javax.swing.JTextField MotivoField;
